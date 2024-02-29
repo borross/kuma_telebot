@@ -9,10 +9,10 @@
 5. systemctl enable bot-kuma.service; systemctl start bot-kuma.service
 
 # Скриншоты работы скрипта
-![image](https://github.com/borross/kuma_telebot/assets/39199196/ae825c8c-e258-4a5d-aec2-7df42c19d830)
+![image](https://github.com/borross/kuma_telebot/assets/39199196/379a4b1d-44b5-443a-9117-f82d81a8b174)
 
-![image](https://github.com/borross/kuma_telebot/assets/39199196/2f577fdf-1b37-4050-9ec6-1d10a032cb00)
+![image](https://github.com/borross/kuma_telebot/assets/39199196/c1fbdc5c-2828-45cf-ac90-5fa5be1a99d0)
 
-![image](https://github.com/borross/kuma_telebot/assets/39199196/f649ed9c-abe1-4c46-a233-48e7bc37f4d9)
+![image](https://github.com/borross/kuma_telebot/assets/39199196/c6d23989-c6d6-4e54-b98b-6107fd713c38)
 
-![image](https://github.com/borross/kuma_telebot/assets/39199196/5192f128-441a-443d-b7fa-74ae17a1e730)
+![image](https://github.com/borross/kuma_telebot/assets/39199196/2ae40c6d-6278-4ada-8600-afe5433baa08)
