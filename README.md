@@ -16,3 +16,10 @@
 ![image](https://github.com/borross/kuma_telebot/assets/39199196/c6d23989-c6d6-4e54-b98b-6107fd713c38)
 
 ![image](https://github.com/borross/kuma_telebot/assets/39199196/2ae40c6d-6278-4ada-8600-afe5433baa08)
+
+# Версия 2
+Добавлен фунционал выгрузки отчетов из KUMA с помощью бота, добавлена новая кнопка по нажатию которой выгружается список сгенерированных отчетов, по нажатию в боте на строку с командой /report_<цифра> загружается конкретный отчет.
+
+Скриншот с нововведениями:
+
+![image](https://github.com/borross/kuma_telebot/assets/39199196/b7fcb51e-e029-4b8d-a00b-00004c650a38)
