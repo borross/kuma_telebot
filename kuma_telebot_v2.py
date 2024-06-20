@@ -116,6 +116,8 @@ def handle_hello_world(message):
         for item in json_data:
             if item.get('status') == "green":
                 light = "🟢"
+            elif item.get('status') == "blue":
+                light = "🔵"
             else:
                 light = "🔴"
             string_acc += light + " " + item.get('name') + "\n"
