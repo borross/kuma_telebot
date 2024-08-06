@@ -5,7 +5,6 @@ import subprocess
 import socket
 import threading
 from configparser import ConfigParser
-from telebot import types
 import logging
 import signal
 import os
