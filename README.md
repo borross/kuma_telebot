@@ -6,11 +6,22 @@
 - Необходима библиотека (pyTelegramBotAPI), установка: `pip3 install pyTelegramBotAPI`
 
 # Шаги для настройки
-1. Разместите файлы kuma_telebot.conf, kuma_telebot.py, send_alert_to_bot.sh по пути */opt/kaspersky/kuma/correlator/<ID_CORRELATOR>/scripts/*
-2. Заполните файл конфигурации kuma_telebot.conf
-3. Создайте правило реагирования которое запускает скрипт send_alert_to_bot.sh со следующим аргументом: *"{{.Timestamp}} | {{.Name}} | {{.DeviceHostName}} | {{.Message}} | {{.Tactic}} | {{.Technique}}"*
-4. Создайте службу запуска скрипта для бота сморти содержимое файла bot-kuma.service, его нужно создать по пути */usr/lib/systemd/system/*
-5. systemctl enable bot-kuma.service; systemctl start bot-kuma.service
+1. Разместите файлы `kuma_telebot.conf`, `kuma_telebot.py`, `send_alert_to_bot.sh` по пути:
+   ```console
+   /opt/kaspersky/kuma/correlator/<ID_CORRELATOR>/scripts/
+   ```
+2. Заполните файл конфигурации `kuma_telebot.conf`
+3. Отредактируйте 8 строку файла `send_alert_to_bot.sh` добавив значение `<ID_CORRELATOR>`
+4. Создайте правило реагирования которое запускает скрипт `send_alert_to_bot.sh` со следующим аргументом:
+   `"{{.Timestamp}} | {{.Name}} | {{.DeviceHostName}} | {{.Message}} | {{.Tactic}} | {{.Technique}}"`
+   
+   ![image](https://github.com/user-attachments/assets/3fbcdff2-52ea-4006-a33b-ca81a51a102b)
+
+5. Создайте службу запуска скрипта для бота сморти содержимое файла `bot-kuma.service`, его нужно создать по пути
+   ```console
+   /usr/lib/systemd/system/
+   ```
+6. Добавьте службу в автозапуск и запустите ее: `systemctl enable bot-kuma.service; systemctl start bot-kuma.service`
 
 # Скриншоты работы скрипта
 ![image](https://github.com/borross/kuma_telebot/assets/39199196/379a4b1d-44b5-443a-9117-f82d81a8b174)
