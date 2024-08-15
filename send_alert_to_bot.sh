@@ -5,7 +5,7 @@ set -eu
 RULE=$1
 
 # writing local log of arguments 
-echo $(date +"%d-%m-%Y %T.%3N") - $RULE >> /opt/kaspersky/kuma/correlator/0b9200ae-d5a9-41ce-bf7b-c16814ed9524/scripts/bot.log
+echo $(date +"%d-%m-%Y %T.%3N") - $RULE >> /opt/kaspersky/kuma/correlator/<ID_CORRELATOR>/scripts/bot.log
 
 # escaping spec characters in argument except \s \| 
 #RULE=$(echo $RULE | sed 's/[][\~`!@#$%^&*()=+{};:'"'"'"<>/?-]/\\&/g')
