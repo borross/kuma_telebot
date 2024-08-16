@@ -236,40 +236,43 @@ signal.signal(signal.SIGTERM, handle_exit)
 
 @bot.callback_query_handler(func=lambda call: True)
 def handle_button_click(call):
-    if call.data.startswith("button_pressed_"):
-        chat_id = call.message.chat.id
-        try:
-            #bot.send_message(chat_id, f"Вы нажали кнопку и вот текст сообщения:\n{call.message.text}")
-            
-            matches = re.findall(ruleNameRegex, call.message.text)
-            # Выводим первое найденное совпадение
-            if matches:
-                search_substring = matches[0]
-                search_substring = search_substring[:-2]
-                response = requests.request("GET", kumaGetAlerts, headers=headers, verify=False)
-                json_data = json.loads(response.text)
-                #print(json_data)
-                result_ids = find_id_by_substring(json_data, search_substring)
-                #print(result_ids)
-                # перечисляем все ID алертов с совпадением с подстрокой поиска
-                if result_ids:
-                    print(f"Найдены совпадения для подстроки '{search_substring}', соответствующие ID:")
-                    for item_id in result_ids:        
-                        payload = json.dumps({"id": item_id, "reason": "responded"})
-                        response = requests.request("POST", kumaCloseAlerts, headers=headers, data=payload, verify=False)
-                        if int(response.status_code) == 204:
-                            bot.send_message(chat_id, f"Алерт: {search_substring}\nID: {item_id}\nЗАКРЫТ")
+    if call.message.from_user.id in allowed_users:
+        if call.data.startswith("button_pressed_"):
+            chat_id = call.message.chat.id
+            try:
+                #bot.send_message(chat_id, f"Вы нажали кнопку и вот текст сообщения:\n{call.message.text}")
+                
+                matches = re.findall(ruleNameRegex, call.message.text)
+                # Выводим первое найденное совпадение
+                if matches:
+                    search_substring = matches[0]
+                    search_substring = search_substring[:-2]
+                    response = requests.request("GET", kumaGetAlerts, headers=headers, verify=False)
+                    json_data = json.loads(response.text)
+                    #print(json_data)
+                    result_ids = find_id_by_substring(json_data, search_substring)
+                    #print(result_ids)
+                    # перечисляем все ID алертов с совпадением с подстрокой поиска
+                    if result_ids:
+                        print(f"Найдены совпадения для подстроки '{search_substring}', соответствующие ID:")
+                        for item_id in result_ids:        
+                            payload = json.dumps({"id": item_id, "reason": "responded"})
+                            response = requests.request("POST", kumaCloseAlerts, headers=headers, data=payload, verify=False)
+                            if int(response.status_code) == 204:
+                                bot.send_message(chat_id, f"Алерт: {search_substring}\nID: {item_id}\nЗАКРЫТ")
+                    else:
+                        print(f"Нет совпадений для подстроки '{search_substring}'.")
+                        bot.send_message(chat_id, f"Алерт: {search_substring} ОТСУТСТВУЕТ")
+                    #bot.send_message(chat_id, f"Совпадение: {result}")
                 else:
-                    print(f"Нет совпадений для подстроки '{search_substring}'.")
-                    bot.send_message(chat_id, f"Алерт: {search_substring} ОТСУТСТВУЕТ")
-                #bot.send_message(chat_id, f"Совпадение: {result}")
-            else:
-                print(r"Совпадения не найдены.")           
-            bot.delete_message(chat_id, call.message.message_id)
-        except ValueError:
-            logging.error("Invalid message_id in callback_data.")
-        except telebot.apihelper.ApiException as api_exception:
-            logging.error(f"Telegram API exception: {api_exception}")
+                    print(r"Совпадения не найдены.")           
+                bot.delete_message(chat_id, call.message.message_id)
+            except ValueError:
+                logging.error("Invalid message_id in callback_data.")
+            except telebot.apihelper.ApiException as api_exception:
+                logging.error(f"Telegram API exception: {api_exception}")
+    else:
+        bot.reply_to(call.message, f"У тебя нет доступа ко мне!")
 
 # Запуск сервера в отдельном потоке
 tcp_thread = threading.Thread(target=tcp_server)
