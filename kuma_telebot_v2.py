@@ -104,52 +104,54 @@ def execute_command(message):
 
 @bot.message_handler(func=lambda message: message.text.startswith(f"🕹️"))
 def handle_hello_world(message):
-    chat_id = message.chat.id
-    if message.text == "🕹️ Активные сервисы":
-        bot.delete_message(chat_id, message.message_id)
-        bot.send_message(chat_id, f"Активные сервисы: 🔽")
-        response = requests.request("GET", kumaServices, headers=headers, verify=False)
-        json_data = json.loads(response.text)
-        string_acc = ""
-        light = ""
-        for item in json_data:
-            if item.get('status') == "green":
-                light = "🟢"
-            elif item.get('status') == "blue":
-                light = "🔵"
-            else:
-                light = "🔴"
-            string_acc += light + " " + item.get('name') + "\n"
-        bot.send_message(chat_id, string_acc)
-    if message.text == "🕹️ Backup":
-        response = requests.request("GET", kumaBackup, headers=headers, verify=False)
-        with open(backupName, "wb") as f:
-            f.write(response.content)
-        backup_size = os.path.getsize(backupName) >> 20
-        if int(response.status_code) == 200:
+    if message.from_user.id in allowed_users:
+        chat_id = message.chat.id
+        if message.text == "🕹️ Активные сервисы":
             bot.delete_message(chat_id, message.message_id)
-            bot.send_message(chat_id, f"✅ Бекап успешно создан!\n{backupName}\nРазмер: {backup_size} MB")
-        else:
-            bot.delete_message(chat_id, message.message_id)
-            bot.send_message(chat_id, f"⛔ С бекапом что-то пошло не так!")
-    if message.text == "🕹️ Список отчетов":                
-        url = f'https://{kumaAddr}:7220/api/private/reports/?order=-createdAt&limit=250'
-        response = session.get(url, headers = cooks, verify=False)
-        if int(response.status_code) == 200:
-            bot.delete_message(chat_id, message.message_id)
+            bot.send_message(chat_id, f"Активные сервисы: 🔽")
+            response = requests.request("GET", kumaServices, headers=headers, verify=False)
             json_data = json.loads(response.text)
-            global reps
-            reps = []
-            cnt = 0
+            string_acc = ""
+            light = ""
             for item in json_data:
-                string = "{\"cmd\":\"/report_" + str(cnt) + "\",\"num\":\"" + str(cnt) + "\",\"id\":\"" +  item.get('id') + "\",\"name\":\"" + item.get('name') + "\",\"date\":\"" + str(datetime.fromtimestamp(item.get('createdAt') / 1000)) + "\"}"
-                reps.append(string)
-                cnt += 1
-            bot.send_message(chat_id, f"{str(reps)[1:-1]}")
-        else:
-            bot.delete_message(chat_id, message.message_id)
-            bot.send_message(chat_id, f"⛔ С отчетом что-то пошло не так!")
-
+                if item.get('status') == "green":
+                    light = "🟢"
+                elif item.get('status') == "blue":
+                    light = "🔵"
+                else:
+                    light = "🔴"
+                string_acc += light + " " + item.get('name') + "\n"
+            bot.send_message(chat_id, string_acc)
+        if message.text == "🕹️ Backup":
+            response = requests.request("GET", kumaBackup, headers=headers, verify=False)
+            with open(backupName, "wb") as f:
+                f.write(response.content)
+            backup_size = os.path.getsize(backupName) >> 20
+            if int(response.status_code) == 200:
+                bot.delete_message(chat_id, message.message_id)
+                bot.send_message(chat_id, f"✅ Бекап успешно создан!\n{backupName}\nРазмер: {backup_size} MB")
+            else:
+                bot.delete_message(chat_id, message.message_id)
+                bot.send_message(chat_id, f"⛔ С бекапом что-то пошло не так!")
+        if message.text == "🕹️ Список отчетов":                
+            url = f'https://{kumaAddr}:7220/api/private/reports/?order=-createdAt&limit=250'
+            response = session.get(url, headers = cooks, verify=False)
+            if int(response.status_code) == 200:
+                bot.delete_message(chat_id, message.message_id)
+                json_data = json.loads(response.text)
+                global reps
+                reps = []
+                cnt = 0
+                for item in json_data:
+                    string = "{\"cmd\":\"/report_" + str(cnt) + "\",\"num\":\"" + str(cnt) + "\",\"id\":\"" +  item.get('id') + "\",\"name\":\"" + item.get('name') + "\",\"date\":\"" + str(datetime.fromtimestamp(item.get('createdAt') / 1000)) + "\"}"
+                    reps.append(string)
+                    cnt += 1
+                bot.send_message(chat_id, f"{str(reps)[1:-1]}")
+            else:
+                bot.delete_message(chat_id, message.message_id)
+                bot.send_message(chat_id, f"⛔ С отчетом что-то пошло не так!")
+    else:
+        bot.reply_to(message, f"У тебя нет доступа ко мне!")
 
 @bot.message_handler(func=lambda message: message.text.startswith('//report_') or message.text.startswith(r'/report_'))
 def execute_command(message):
